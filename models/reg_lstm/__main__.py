@@ -12,7 +12,8 @@ from datasets.aapd import AAPD
 from datasets.imdb import IMDB
 from datasets.reuters import Reuters
 from datasets.yelp2014 import Yelp2014
-from datasets.lyrics import Lyrics
+from datasets.lyricsGenre import LyricsGenre
+from datasets.lyricsArtist import LyricsArtist
 from models.reg_lstm.args import get_args
 from models.reg_lstm.model import RegLSTM
 
@@ -87,7 +88,8 @@ if __name__ == '__main__':
         'AAPD': AAPD,
         'IMDB': IMDB,
         'Yelp2014': Yelp2014,
-        'Lyrics': Lyrics
+        'LyricsGenre': LyricsGenre,
+        'LyricsArtist': LyricsArtist
     }
 
     args.device = device
@@ -106,7 +108,9 @@ if __name__ == '__main__':
 
     config = deepcopy(args)
     config.dataset = train_iter.dataset
-    config.target_class = train_iter.dataset.NUM_CLASSES
+    config.dataset.set_attributes(args.data_dir)
+
+    config.target_class = config.dataset.NUM_CLASSES
     config.words_num = len(train_iter.dataset.TEXT_FIELD.vocab)
 
     print('Dataset:', args.dataset)
@@ -171,10 +175,10 @@ if __name__ == '__main__':
 
     # Calculate dev and test metrics
     evaluate_dataset('dev', dataset_class, model, None, dev_iter, args.batch_size,
-                     is_multilabel=dataset_class.IS_MULTILABEL,
+                     is_multilabel=config.dataset.IS_MULTILABEL,
                      device=args.gpu)
     evaluate_dataset('test', dataset_class, model, None, test_iter, args.batch_size,
-                     is_multilabel=dataset_class.IS_MULTILABEL,
+                     is_multilabel=config.dataset.IS_MULTILABEL,
                      device=args.gpu)
 
     if model.beta_ema > 0:

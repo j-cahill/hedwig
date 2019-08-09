@@ -50,12 +50,19 @@ class ClassificationEvaluator(Evaluator):
                 # Temporal activation regularization
                 total_loss += (rnn_outs[1:] - rnn_outs[:-1]).pow(2).mean()
 
+        if self.args.is_multilabel:
+            score_method = 'micro'
+            pos_label = None
+        else:
+            score_method = 'binary'
+            pos_label = 1
+
         predicted_labels = np.array(predicted_labels)
         target_labels = np.array(target_labels)
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
-        precision = metrics.precision_score(target_labels, predicted_labels, average='micro')
-        recall = metrics.recall_score(target_labels, predicted_labels, average='micro')
-        f1 = metrics.f1_score(target_labels, predicted_labels, average='micro')
+        precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
+        recall = metrics.recall_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
+        f1 = metrics.f1_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         avg_loss = total_loss / len(self.data_loader.dataset.examples)
 
         if hasattr(self.model, 'beta_ema') and self.model.beta_ema > 0:

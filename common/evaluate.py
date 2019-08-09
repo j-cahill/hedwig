@@ -11,7 +11,8 @@ class EvaluatorFactory(object):
         'AAPD': ClassificationEvaluator,
         'IMDB': ClassificationEvaluator,
         'Yelp2014': ClassificationEvaluator,
-        'Lyrics': ClassificationEvaluator,
+        'LyricsGenre': ClassificationEvaluator,
+        'LyricsArtist': ClassificationEvaluator,
         'Robust04': RelevanceTransferEvaluator,
         'Robust05': RelevanceTransferEvaluator,
         'Robust45': RelevanceTransferEvaluator
