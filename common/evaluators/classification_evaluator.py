@@ -11,7 +11,7 @@ class ClassificationEvaluator(Evaluator):
     def __init__(self, dataset_cls, model, embedding, data_loader, batch_size, device, keep_results=False):
         super().__init__(dataset_cls, model, embedding, data_loader, batch_size, device, keep_results)
         self.ignore_lengths = False
-        # self.is_multilabel = False
+        self.is_multilabel = False
 
     def get_scores(self):
         self.model.eval()
@@ -51,6 +51,7 @@ class ClassificationEvaluator(Evaluator):
                 total_loss += (rnn_outs[1:] - rnn_outs[:-1]).pow(2).mean()
 
         if self.is_multilabel:
+            print('multilabel')
             score_method = 'micro'
             pos_label = None
         else:
