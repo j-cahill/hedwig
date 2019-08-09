@@ -51,7 +51,6 @@ class ClassificationEvaluator(Evaluator):
                 total_loss += (rnn_outs[1:] - rnn_outs[:-1]).pow(2).mean()
 
         if self.is_multilabel:
-            print('multilabel')
             score_method = 'micro'
             pos_label = None
         else:

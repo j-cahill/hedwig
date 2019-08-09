@@ -62,24 +62,7 @@ def evaluate_dataset(split_name, dataset_cls, model, embedding, loader, batch_si
 
 if __name__ == '__main__':
     # Set default configuration in args.py
-    # args = get_args()
     logger = get_logger()
-    #
-    # # Set random seed for reproducibility
-    # torch.manual_seed(args.seed)
-    # torch.backends.cudnn.deterministic = True
-    # np.random.seed(args.seed)
-    # random.seed(args.seed)
-    #
-    # if not args.cuda:
-    #     args.gpu = -1
-    # if torch.cuda.is_available() and args.cuda:
-    #     print('Note: You are using GPU for training')
-    #     torch.cuda.set_device('cuda:{}'.format(args.gpu))
-    #     torch.cuda.manual_seed(args.seed)
-    # if torch.cuda.is_available() and not args.cuda:
-    #     print('Warning: Using CPU for training')
-
     args = get_args()
 
     if args.local_rank == -1 or not args.cuda:
@@ -128,7 +111,9 @@ if __name__ == '__main__':
 
     config = deepcopy(args)
     config.dataset = train_iter.dataset
-    config.target_class = train_iter.dataset.NUM_CLASSES
+    config.dataset.set_attributes(args.data_dir)
+
+    config.target_class = config.dataset.NUM_CLASSES
     config.words_num = len(train_iter.dataset.TEXT_FIELD.vocab)
 
     print('Dataset:', args.dataset)
@@ -159,13 +144,13 @@ if __name__ == '__main__':
     dev_evaluator = EvaluatorFactory.get_evaluator(dataset_class, model, None, dev_iter, args.batch_size, args.gpu)
 
     if hasattr(train_evaluator, 'is_multilabel'):
-        train_evaluator.is_multilabel = dataset_class.IS_MULTILABEL
+        train_evaluator.is_multilabel = config.dataset.IS_MULTILABEL
     if hasattr(dev_evaluator, 'is_multilabel'):
-        dev_evaluator.is_multilabel = dataset_class.IS_MULTILABEL
+        dev_evaluator.is_multilabel = config.dataset.IS_MULTILABEL
     if hasattr(dev_evaluator, 'ignore_lengths'):
         dev_evaluator.ignore_lengths = True
     if hasattr(test_evaluator, 'is_multilabel'):
-        test_evaluator.is_multilabel = dataset_class.IS_MULTILABEL
+        test_evaluator.is_multilabel = config.dataset.IS_MULTILABEL
     if hasattr(test_evaluator, 'ignore_lengths'):
         test_evaluator.ignore_lengths = True
 
@@ -176,7 +161,7 @@ if __name__ == '__main__':
         'patience': args.patience,
         'model_outfile': args.save_path,
         'logger': logger,
-        'is_multilabel': dataset_class.IS_MULTILABEL,
+        'is_multilabel': config.dataset.IS_MULTILABEL,
         'ignore_lengths': True
     }
 
@@ -194,9 +179,9 @@ if __name__ == '__main__':
     if hasattr(trainer, 'snapshot_path'):
         model = torch.load(trainer.snapshot_path)
 
-    evaluate_dataset('dev', dataset_map[args.dataset], model, None, dev_iter, args.batch_size,
-                     is_multilabel=dataset_class.IS_MULTILABEL,
+    evaluate_dataset('dev', dataset_class, model, None, dev_iter, args.batch_size,
+                     is_multilabel=config.dataset.IS_MULTILABEL,
                      device=args.gpu)
-    evaluate_dataset('test', dataset_map[args.dataset], model, None, test_iter, args.batch_size,
+    evaluate_dataset('test', dataset_class, model, None, test_iter, args.batch_size,
                      is_multilabel=dataset_class.IS_MULTILABEL,
                      device=args.gpu)
