@@ -47,9 +47,10 @@ class LyricsGenre(TabularDataset):
     #
     TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
     LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
+    NAME = 'LyricsGenre'
 
     def set_attributes(self, data_dir):
-        self.NAME = 'LyricsGenre'
+        # self.NAME = 'LyricsGenre'
         # self.TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
         # self.LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
 
