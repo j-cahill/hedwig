@@ -45,13 +45,13 @@ class LyricsGenre(TabularDataset):
     # NUM_CLASSES = 2 #10
     # IS_MULTILABEL = False #True
     #
-    # TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
-    # LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
+    TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
+    LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
 
     def set_attributes(self, data_dir):
         self.NAME = 'LyricsGenre'
-        self.TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
-        self.LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
+        # self.TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
+        # self.LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
 
         with open(os.path.join(data_dir, 'LyricsGenre', 'train.tsv'), 'r') as f:
             l1 = f.readline().split('\t')
