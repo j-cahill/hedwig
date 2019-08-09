@@ -40,10 +40,10 @@ def process_labels(string):
     return [float(x) for x in string]
 
 
-class Lyrics(TabularDataset):
-    NAME = 'Lyrics'
-    NUM_CLASSES = 2 #10
-    IS_MULTILABEL = False #True
+class LyricsArtist(TabularDataset):
+    NAME = 'LyricsArtist'
+    NUM_CLASSES = 100
+    IS_MULTILABEL = True
 
     TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
     LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
@@ -53,10 +53,10 @@ class Lyrics(TabularDataset):
         return len(ex.text)
 
     @classmethod
-    def splits(cls, path, train=os.path.join('Lyrics', 'train.tsv'),
-               validation=os.path.join('Lyrics', 'dev.tsv'),
-               test=os.path.join('Lyrics', 'test.tsv'), **kwargs):
-        return super(Lyrics, cls).splits(
+    def splits(cls, path, train=os.path.join('LyricsArtist', 'train.tsv'),
+               validation=os.path.join('LyricsArtist', 'dev.tsv'),
+               test=os.path.join('LyricsArtist', 'test.tsv'), **kwargs):
+        return super(LyricsArtist, cls).splits(
             path, train=train, validation=validation, test=test,
             format='tsv', fields=[('label', cls.LABEL_FIELD), ('text', cls.TEXT_FIELD)]
         )
@@ -83,7 +83,7 @@ class Lyrics(TabularDataset):
                                      sort_within_batch=True, device=device)
 
 
-class LyricsCharQuantized(Lyrics):
+class LyricsArtistCharQuantized(LyricsArtist):
     ALPHABET = dict(map(lambda t: (t[1], t[0]), enumerate(list("""abcdefghijklmnopqrstuvwxyz0123456789,;.!?:'\"/\\|_@#$%^&*~`+-=<>()[]{}"""))))
     TEXT_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=char_quantize)
 
@@ -100,6 +100,6 @@ class LyricsCharQuantized(Lyrics):
         return BucketIterator.splits((train, val, test), batch_size=batch_size, repeat=False, shuffle=shuffle, device=device)
 
 
-class LyricsHierarchical(Lyrics):
+class LyricsArtistHierarchical(LyricsArtist):
     NESTING_FIELD = Field(batch_first=True, tokenize=clean_string)
     TEXT_FIELD = NestedField(NESTING_FIELD, tokenize=split_sents)

@@ -15,7 +15,8 @@ from datasets.bert_processors.reuters_processor import ReutersProcessor
 from datasets.bert_processors.sogou_processor import SogouProcessor
 from datasets.bert_processors.sst_processor import SST2Processor
 from datasets.bert_processors.yelp2014_processor import Yelp2014Processor
-from datasets.bert_processors.lyrics_processor import LyricsProcessor
+from datasets.bert_processors.lyricsGenre_processor import LyricsGenreProcessor
+from datasets.bert_processors.lyricsArtist_processor import LyricsArtistProcessor
 
 from models.bert.args import get_args
 from models.bert.model import BertForSequenceClassification
@@ -71,7 +72,8 @@ if __name__ == '__main__':
         'AGNews': AGNewsProcessor,
         'Yelp2014': Yelp2014Processor,
         'Sogou': SogouProcessor,
-        'Lyrics': LyricsProcessor
+        'LyricsGenre': LyricsGenreProcessor,
+        'LyricsArtist': LyricsArtistProcessor,
     }
 
     if args.gradient_accumulation_steps < 1:

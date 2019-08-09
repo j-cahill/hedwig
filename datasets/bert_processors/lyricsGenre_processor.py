@@ -3,12 +3,12 @@ import os
 from datasets.bert_processors.abstract_processor import BertProcessor, InputExample
 
 
-class LyricsProcessor(BertProcessor):
+class LyricsGenreProcessor(BertProcessor):
     def __init__(self):
-        self.NAME = 'Lyrics'
+        self.NAME = 'LyricsGenre'
 
     def set_num_classes_(self, data_dir):
-        with open(os.path.join(data_dir, 'Lyrics', 'train.tsv'), 'r') as f:
+        with open(os.path.join(data_dir, 'LyricsGenre', 'train.tsv'), 'r') as f:
             l1 = f.readline().split('\t')
 
         # from one-hot class vector
@@ -17,15 +17,15 @@ class LyricsProcessor(BertProcessor):
 
     def get_train_examples(self, data_dir):
         return self._create_examples(
-            self._read_tsv(os.path.join(data_dir, 'Lyrics', 'train.tsv')), 'train')
+            self._read_tsv(os.path.join(data_dir, 'LyricsGenre', 'train.tsv')), 'train')
 
     def get_dev_examples(self, data_dir):
         return self._create_examples(
-            self._read_tsv(os.path.join(data_dir, 'Lyrics', 'dev.tsv')), 'dev')
+            self._read_tsv(os.path.join(data_dir, 'LyricsGenre', 'dev.tsv')), 'dev')
 
     def get_test_examples(self, data_dir):
         return self._create_examples(
-            self._read_tsv(os.path.join(data_dir, 'Lyrics', 'test.tsv')), 'test')
+            self._read_tsv(os.path.join(data_dir, 'LyricsGenre', 'test.tsv')), 'test')
 
     def _create_examples(self, lines, set_type):
         """Creates examples for the training and dev sets."""
