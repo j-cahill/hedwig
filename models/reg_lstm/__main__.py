@@ -141,11 +141,11 @@ if __name__ == '__main__':
     dev_evaluator = EvaluatorFactory.get_evaluator(dataset_class, model, None, dev_iter, args.batch_size, args.gpu)
 
     if hasattr(train_evaluator, 'is_multilabel'):
-        train_evaluator.is_multilabel = dataset_class.IS_MULTILABEL
+        train_evaluator.is_multilabel = config.dataset.IS_MULTILABEL
     if hasattr(test_evaluator, 'is_multilabel'):
-        test_evaluator.is_multilabel = dataset_class.IS_MULTILABEL
+        test_evaluator.is_multilabel = config.dataset.IS_MULTILABEL
     if hasattr(dev_evaluator, 'is_multilabel'):
-        dev_evaluator.is_multilabel = dataset_class.IS_MULTILABEL
+        dev_evaluator.is_multilabel = config.dataset.IS_MULTILABEL
 
     trainer_config = {
         'optimizer': optimizer,
@@ -154,7 +154,7 @@ if __name__ == '__main__':
         'patience': args.patience,
         'model_outfile': args.save_path,
         'logger': logger,
-        'is_multilabel': dataset_class.IS_MULTILABEL
+        'is_multilabel': config.dataset.IS_MULTILABEL
     }
 
     trainer = TrainerFactory.get_trainer(args.dataset, model, None, train_iter, trainer_config, train_evaluator, test_evaluator, dev_evaluator)
