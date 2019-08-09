@@ -183,5 +183,5 @@ if __name__ == '__main__':
                      is_multilabel=config.dataset.IS_MULTILABEL,
                      device=args.gpu)
     evaluate_dataset('test', dataset_class, model, None, test_iter, args.batch_size,
-                     is_multilabel=dataset_class.IS_MULTILABEL,
+                     is_multilabel=config.dataset.IS_MULTILABEL,
                      device=args.gpu)
