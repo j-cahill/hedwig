@@ -23,12 +23,12 @@ def split_sents(string):
 
 
 def char_quantize(string, max_length=1000):
-    identity = np.identity(len(LyricsCharQuantized.ALPHABET))
-    quantized_string = np.array([identity[LyricsCharQuantized.ALPHABET[char]] for char in list(string.lower()) if char in LyricsCharQuantized.ALPHABET], dtype=np.float32)
+    identity = np.identity(len(LyricsArtistCharQuantized.ALPHABET))
+    quantized_string = np.array([identity[LyricsArtistCharQuantized.ALPHABET[char]] for char in list(string.lower()) if char in LyricsArtistCharQuantized.ALPHABET], dtype=np.float32)
     if len(quantized_string) > max_length:
         return quantized_string[:max_length]
     else:
-        return np.concatenate((quantized_string, np.zeros((max_length - len(quantized_string), len(LyricsCharQuantized.ALPHABET)), dtype=np.float32)))
+        return np.concatenate((quantized_string, np.zeros((max_length - len(quantized_string), len(LyricsArtistCharQuantized.ALPHABET)), dtype=np.float32)))
 
 
 def process_labels(string):
