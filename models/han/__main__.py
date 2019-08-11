@@ -111,6 +111,7 @@ if __name__ == '__main__':
 
     config = deepcopy(args)
     config.dataset = train_iter.dataset
+    print(config)
     config.dataset.set_attributes(args.data_dir)
 
     config.target_class = config.dataset.NUM_CLASSES

@@ -23,12 +23,12 @@ def split_sents(string):
 
 
 def char_quantize(string, max_length=1000):
-    identity = np.identity(len(LyricsCharQuantized.ALPHABET))
-    quantized_string = np.array([identity[LyricsCharQuantized.ALPHABET[char]] for char in list(string.lower()) if char in LyricsCharQuantized.ALPHABET], dtype=np.float32)
+    identity = np.identity(len(LyricsArtistCharQuantized.ALPHABET))
+    quantized_string = np.array([identity[LyricsArtistCharQuantized.ALPHABET[char]] for char in list(string.lower()) if char in LyricsArtistCharQuantized.ALPHABET], dtype=np.float32)
     if len(quantized_string) > max_length:
         return quantized_string[:max_length]
     else:
-        return np.concatenate((quantized_string, np.zeros((max_length - len(quantized_string), len(LyricsCharQuantized.ALPHABET)), dtype=np.float32)))
+        return np.concatenate((quantized_string, np.zeros((max_length - len(quantized_string), len(LyricsArtistCharQuantized.ALPHABET)), dtype=np.float32)))
 
 
 def process_labels(string):
@@ -41,12 +41,25 @@ def process_labels(string):
 
 
 class LyricsArtist(TabularDataset):
-    NAME = 'LyricsArtist'
-    NUM_CLASSES = 100
-    IS_MULTILABEL = True
+    # NAME = 'LyricsArtist'
+    # NUM_CLASSES = 100
+    # IS_MULTILABEL = True
 
     TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
     LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
+    NAME = 'LyricsArtist'
+
+    def set_attributes(self, data_dir):
+        # self.NAME = 'LyricsGenre'
+        # self.TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
+        # self.LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
+
+        with open(os.path.join(data_dir, 'LyricsArtist', 'train.tsv'), 'r') as f:
+            l1 = f.readline().split('\t')
+
+        # from one-hot class vector
+        self.NUM_CLASSES = len(l1[0])
+        self.IS_MULTILABEL = self.NUM_CLASSES > 2
 
     @staticmethod
     def sort_key(ex):
