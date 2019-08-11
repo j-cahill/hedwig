@@ -54,7 +54,7 @@ class LyricsArtist(TabularDataset):
         # self.TEXT_FIELD = Field(batch_first=True, tokenize=clean_string, include_lengths=True)
         # self.LABEL_FIELD = Field(sequential=False, use_vocab=False, batch_first=True, preprocessing=process_labels)
 
-        with open(os.path.join(data_dir, 'LyricsGenre', 'train.tsv'), 'r') as f:
+        with open(os.path.join(data_dir, 'LyricsArtist', 'train.tsv'), 'r') as f:
             l1 = f.readline().split('\t')
 
         # from one-hot class vector
