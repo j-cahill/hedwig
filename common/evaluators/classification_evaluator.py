@@ -53,9 +53,11 @@ class ClassificationEvaluator(Evaluator):
         if self.is_multilabel:
             score_method = 'micro'
             pos_label = None
+            print('multilabel')
         else:
             score_method = 'binary'
             pos_label = 1
+            print('binary')
 
         predicted_labels = np.array(predicted_labels)
         target_labels = np.array(target_labels)
