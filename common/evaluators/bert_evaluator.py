@@ -94,11 +94,16 @@ class BertEvaluator(object):
             score_method = 'binary'
             pos_label = 1
 
+        print(score_method)
         predicted_labels, target_labels = np.array(predicted_labels), np.array(target_labels)
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
+        print(accuracy)
         precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
+        print(precision)
         recall = metrics.recall_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
+        print(recall)
         f1 = metrics.f1_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
+        print(f1)
         avg_loss = total_loss / nb_eval_steps
 
         predicted_labels = np.apply_along_axis(lambda x: ''.join(x), 1, predicted_labels.astype(str))
@@ -106,8 +111,8 @@ class BertEvaluator(object):
         # predictions = np.hstack([predicted_labels, target_labels])
 
         # np.savetxt('predictions.csv', predictions, delimiter=',')
-
-        with open('predictions.txt', 'w') as f:
+        x = np.random.randint(1000)
+        with open('predictions_{}.txt'.format(x), 'w') as f:
             pred = pd.DataFrame(
                 {
                     'predicted': predicted_labels,
