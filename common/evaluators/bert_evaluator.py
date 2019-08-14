@@ -95,15 +95,14 @@ class BertEvaluator(object):
             pos_label = 1
 
         predicted_labels, target_labels = np.array(predicted_labels), np.array(target_labels)
-        print(predicted_labels)
-        print(predicted_labels.shape)
-        print(predicted_labels.dtype)
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
         precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         recall = metrics.recall_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         f1 = metrics.f1_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         avg_loss = total_loss / nb_eval_steps
 
+        predicted_labels = np.apply_along_axis(lambda x: ''.join(x), 1, predicted_labels.astype(str))
+        target_labels = np.apply_along_axis(lambda x: ''.join(x), 1, target_labels.astype(str))
         predictions = np.hstack([predicted_labels, target_labels])
         np.savetxt('predictions.csv', predictions, delimiter=',')
 
