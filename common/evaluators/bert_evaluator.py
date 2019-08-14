@@ -1,6 +1,7 @@
 import warnings
 
 import numpy as np
+import pandas as pd
 import torch
 import torch.nn.functional as F
 from sklearn import metrics
@@ -89,11 +90,9 @@ class BertEvaluator(object):
         if self.args.is_multilabel:
             score_method = 'micro'
             pos_label = None
-            print('multilabel')
         else:
             score_method = 'binary'
             pos_label = 1
-            print('binary')
 
         predicted_labels, target_labels = np.array(predicted_labels), np.array(target_labels)
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
@@ -101,5 +100,12 @@ class BertEvaluator(object):
         recall = metrics.recall_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         f1 = metrics.f1_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         avg_loss = total_loss / nb_eval_steps
+
+        with open('predictions.txt', 'w') as f:
+            pred = pd.DataFrame({
+                'predicted': predicted_labels,
+                'target': target_labels
+            })
+            pred.to_csv(f)
 
         return [accuracy, precision, recall, f1, avg_loss], ['accuracy', 'precision', 'recall', 'f1', 'avg_loss']
