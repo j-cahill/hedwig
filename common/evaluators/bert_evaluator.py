@@ -107,7 +107,7 @@ class BertEvaluator(object):
                 'predicted': predicted_labels,
                 'target': target_labels
             },
-                index=range(len(predicted_labels))
+                index= [x for x in range(len(predicted_labels))]
             )
             pred.to_csv(f)
 
