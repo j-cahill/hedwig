@@ -103,18 +103,17 @@ class BertEvaluator(object):
 
         predicted_labels = np.apply_along_axis(lambda x: ''.join(x), 1, predicted_labels.astype(str))
         target_labels = np.apply_along_axis(lambda x: ''.join(x), 1, target_labels.astype(str))
-        predictions = np.hstack([predicted_labels, target_labels])
-        print(predictions)
-        np.savetxt('predictions.csv', predictions, delimiter=',')
+        # predictions = np.hstack([predicted_labels, target_labels])
 
-        # with open('predictions.txt', 'w') as f:
-            # pred = pd.DataFrame(
-            #     {
-            #     'predicted': predicted_labels,
-            #     'target': target_labels
-            # },
-            #     index= [x for x in range(len(predicted_labels))]
-            # )
-            # pred.to_csv(f)
+        # np.savetxt('predictions.csv', predictions, delimiter=',')
+
+        with open('predictions.txt', 'w') as f:
+            pred = pd.DataFrame(
+                {
+                    'predicted': predicted_labels,
+                    'target': target_labels
+                }
+            )
+            pred.to_csv(f)
 
         return [accuracy, precision, recall, f1, avg_loss], ['accuracy', 'precision', 'recall', 'f1', 'avg_loss']
