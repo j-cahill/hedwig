@@ -102,10 +102,13 @@ class BertEvaluator(object):
         avg_loss = total_loss / nb_eval_steps
 
         with open('predictions.txt', 'w') as f:
-            pred = pd.DataFrame({
+            pred = pd.DataFrame(
+                {
                 'predicted': predicted_labels,
                 'target': target_labels
-            })
+            },
+                index=range(len(predicted_labels))
+            )
             pred.to_csv(f)
 
         return [accuracy, precision, recall, f1, avg_loss], ['accuracy', 'precision', 'recall', 'f1', 'avg_loss']
