@@ -70,8 +70,7 @@ class BertEvaluator(object):
                 logits = self.model(input_ids, segment_ids, input_mask)
 
             if self.args.is_multilabel:
-                predicted_labels.extend(F.softmax(logits).round().long().cpu().detach().numpy())
-                print(F.softmax(logits).cpu().detach().numpy())
+                predicted_labels.extend(F.softmax(logits).long().cpu().detach().numpy())
                 target_labels.extend(label_ids.cpu().detach().numpy())
                 loss = F.binary_cross_entropy_with_logits(logits, label_ids.float(), size_average=False)
             else:
@@ -97,7 +96,7 @@ class BertEvaluator(object):
 
         print(score_method)
         predicted_labels, target_labels = np.array(predicted_labels), np.array(target_labels)
-        np.savetxt('predicted_untransformed.csv', predicted_labels.astype(int), delimiter=',')
+        np.savetxt('predicted_untransformed.csv', predicted_labels, delimiter=',')
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
         precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         recall = metrics.recall_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
