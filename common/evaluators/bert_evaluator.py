@@ -89,7 +89,7 @@ class BertEvaluator(object):
             nb_eval_steps += 1
 
         if self.args.is_multilabel:
-            score_method = 'micro'
+            score_method = 'macro'
             pos_label = None
         else:
             score_method = 'binary'
