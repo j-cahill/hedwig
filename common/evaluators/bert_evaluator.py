@@ -95,8 +95,10 @@ class BertEvaluator(object):
             score_method = 'binary'
             pos_label = 1
 
-        np.savetxt('predicted_untransformed.csv', predicted_labels, delimiter=',')
+        # np.savetxt('predicted_untransformed.csv', predicted_labels, delimiter=',')
         predicted_labels, target_labels = np.array(predicted_labels), np.array(target_labels)
+        predicted_labels = (predicted_labels == predicted_labels.max(axis=1, keepdims=True)).astype(int)
+
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
         precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         recall = metrics.recall_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
