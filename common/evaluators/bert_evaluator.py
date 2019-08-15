@@ -96,6 +96,7 @@ class BertEvaluator(object):
 
         print(score_method)
         predicted_labels, target_labels = np.array(predicted_labels), np.array(target_labels)
+        print(predicted_labels)
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
         print(accuracy)
         precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
