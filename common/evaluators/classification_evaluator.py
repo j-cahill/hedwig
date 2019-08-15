@@ -58,6 +58,8 @@ class ClassificationEvaluator(Evaluator):
             pos_label = 1
 
         predicted_labels = np.array(predicted_labels)
+        predicted_labels = (predicted_labels == predicted_labels.max(axis=1, keepdims=True)).astype(int)
+        
         target_labels = np.array(target_labels)
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
         precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
