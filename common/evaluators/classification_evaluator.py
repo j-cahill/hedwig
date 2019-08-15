@@ -67,6 +67,8 @@ class ClassificationEvaluator(Evaluator):
         f1 = metrics.f1_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         avg_loss = total_loss / len(self.data_loader.dataset.examples)
 
+        print(metrics.classification_report(target_labels, predicted_labels, digits=3))
+
         if hasattr(self.model, 'beta_ema') and self.model.beta_ema > 0:
             # Temporal averaging
             self.model.load_params(old_params)
