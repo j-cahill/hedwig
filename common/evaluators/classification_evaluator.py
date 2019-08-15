@@ -37,7 +37,7 @@ class ClassificationEvaluator(Evaluator):
                     scores = self.model(batch.text[0], lengths=batch.text[1])
 
             if self.is_multilabel:
-                scores_rounded = F.sigmoid(scores).round().long()
+                scores_rounded = F.softmax(scores)
                 predicted_labels.extend(scores_rounded.cpu().detach().numpy())
                 target_labels.extend(batch.label.cpu().detach().numpy())
                 total_loss += F.binary_cross_entropy_with_logits(scores, batch.label.float(), size_average=False).item()
@@ -51,13 +51,11 @@ class ClassificationEvaluator(Evaluator):
                 total_loss += (rnn_outs[1:] - rnn_outs[:-1]).pow(2).mean()
 
         if self.is_multilabel:
-            score_method = 'micro'
+            score_method = 'macro'
             pos_label = None
-            print('multilabel')
         else:
             score_method = 'binary'
             pos_label = 1
-            print('binary')
 
         predicted_labels = np.array(predicted_labels)
         target_labels = np.array(target_labels)
