@@ -70,7 +70,7 @@ class BertEvaluator(object):
                 logits = self.model(input_ids, segment_ids, input_mask)
 
             if self.args.is_multilabel:
-                predicted_labels.extend(F.sigmoid(logits).round().long().cpu().detach().numpy())
+                predicted_labels.extend(F.softmax(logits).round().long().cpu().detach().numpy())
                 target_labels.extend(label_ids.cpu().detach().numpy())
                 loss = F.binary_cross_entropy_with_logits(logits, label_ids.float(), size_average=False)
             else:
