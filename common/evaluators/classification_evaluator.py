@@ -37,7 +37,7 @@ class ClassificationEvaluator(Evaluator):
                     scores = self.model(batch.text[0], lengths=batch.text[1])
 
             if self.is_multilabel:
-                scores_rounded = F.sigmoid(scores).round().long()
+                scores_rounded = F.softmax(scores)
                 predicted_labels.extend(scores_rounded.cpu().detach().numpy())
                 target_labels.extend(batch.label.cpu().detach().numpy())
                 total_loss += F.binary_cross_entropy_with_logits(scores, batch.label.float(), size_average=False).item()
@@ -51,19 +51,23 @@ class ClassificationEvaluator(Evaluator):
                 total_loss += (rnn_outs[1:] - rnn_outs[:-1]).pow(2).mean()
 
         if self.is_multilabel:
-            score_method = 'micro'
+            score_method = 'weighted'
             pos_label = None
         else:
             score_method = 'binary'
             pos_label = 1
 
         predicted_labels = np.array(predicted_labels)
+        predicted_labels = (predicted_labels == predicted_labels.max(axis=1, keepdims=True)).astype(int)
+
         target_labels = np.array(target_labels)
         accuracy = metrics.accuracy_score(target_labels, predicted_labels)
         precision = metrics.precision_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         recall = metrics.recall_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         f1 = metrics.f1_score(target_labels, predicted_labels, average=score_method, pos_label=pos_label)
         avg_loss = total_loss / len(self.data_loader.dataset.examples)
+
+        print(metrics.classification_report(target_labels, predicted_labels, digits=3))
 
         if hasattr(self.model, 'beta_ema') and self.model.beta_ema > 0:
             # Temporal averaging

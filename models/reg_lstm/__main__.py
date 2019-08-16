@@ -167,7 +167,7 @@ if __name__ == '__main__':
         else:
             model = torch.load(args.trained_model, map_location=lambda storage, location: storage)
 
-    model = torch.load(trainer.snapshot_path)
+    # model = torch.load(trainer.snapshot_path)
 
     if model.beta_ema > 0:
         old_params = model.get_params()
